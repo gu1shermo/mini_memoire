@@ -1,14 +1,18 @@
 float field[][][];
 int field_states[][][];
-int res = 50;
+int res = 10;
 int x_width, y_height, z_depth;
 // ISO SURFACE
-float isoValue = .50;
-float isoInc = .01;
+float isoValue = 0.25;
+float isoInc = .010;
 
 // WORLEY NOISE
-PVector[] points = new PVector[100];
+int nPoints = 50;
+PVector[] points = new PVector[nPoints];
 int nth = 0;
+
+// SIMPLEX NOISE
+OpenSimplexNoise noise;
 
 //int[] triangles = listOfEdges;
 int[] triangles = triTable;
@@ -16,6 +20,7 @@ int[] triangles = triTable;
 // TODO camera for user
 void setup()
 {
+  
   size(600,600, P3D);
   x_width  = width / res +1; 
   y_height = width / res +1; 
@@ -24,8 +29,11 @@ void setup()
   field = new float[x_width][y_height][z_depth];
   field_states = new int[x_width][y_height][z_depth];
   
-  //initFieldArrayRandom();
-  initFieldArrayPerlin();
+  //initFieldArrayRandom(); // RANDOM
+  //initFieldArrayPerlin(); // PERLIN
+  //initWorleyPoints();     // WORLEY1
+  //initFieldArrayWorley(nth); // WORLEY2
+  initFieldArraySimplex(); // SIMPLEX
   // comparaison doc
   //field_states[0][0][0] = 0; // v4
   //field_states[0][0][1] = 0; // v7
@@ -40,9 +48,16 @@ void setup()
 
 void draw()
 {
-  //noLoop();
-  background(0);
   
+  noLoop();
+  background(0);
+  // debug worley
+  //for(int i = 0; i < points.length; i++)
+  //{
+  //  stroke(255,0,0);
+  //  strokeWeight(8);
+  //  point(points[i].x,points[i].y,points[i].z);
+  //}
   //translate(0, 100,-1000);
   
   //rotateY(0.35 + frameCount * .01);
@@ -62,17 +77,18 @@ void draw()
   
   //rotateX(0.35+ frameCount * .01);
   // ANIMATION
-  if (frameCount % 2 == 0)
-  {
-    initFieldArrayPerlin();
-    isoValue -= 0.001;
-    //println(isoValue, "frameCount % 30 == 0");
-  }
-  if(isoValue < 0 )
-  {
-    println(isoValue, "<0");
-    isoValue = 1.;
-  }
+  //if (frameCount % 2 == 0)
+  //{
+  //  initFieldArrayWorley(nth); // worley
+  //  initFieldArraySimplex(); // simplex
+  //  isoValue -= isoInc;
+  //  //println(isoValue, "frameCount % 2 == 0");
+  //}
+  //if(isoValue < 0 )
+  //{
+  //  println(isoValue, "<0");
+  //  isoValue = 1.;
+  //}
   
   PVector[] cubeVertexPositions = new PVector[8];
   // get values field array
@@ -114,23 +130,23 @@ void draw()
         cubeVertexPositions[7] = v7Pos;
         
         // debug draw cube edges
-        strokeWeight(.5);
-        stroke(200); // 
-        // front
-        line3D(v0Pos, v1Pos);
-        line3D(v1Pos, v2Pos);
-        line3D(v2Pos, v3Pos);
-        line3D(v3Pos, v0Pos);
-        // back
-        line3D(v4Pos, v5Pos);
-        line3D(v5Pos, v6Pos);
-        line3D(v6Pos, v7Pos);
-        line3D(v7Pos, v4Pos);
-        // sides
-        line3D(v0Pos, v4Pos);
-        line3D(v1Pos, v5Pos);
-        line3D(v2Pos, v6Pos);
-        line3D(v3Pos, v7Pos);
+        //strokeWeight(.5);
+        //stroke(200); // 
+        //// front
+        //line3D(v0Pos, v1Pos);
+        //line3D(v1Pos, v2Pos);
+        //line3D(v2Pos, v3Pos);
+        //line3D(v3Pos, v0Pos);
+        //// back
+        //line3D(v4Pos, v5Pos);
+        //line3D(v5Pos, v6Pos);
+        //line3D(v6Pos, v7Pos);
+        //line3D(v7Pos, v4Pos);
+        //// sides
+        //line3D(v0Pos, v4Pos);
+        //line3D(v1Pos, v5Pos);
+        //line3D(v2Pos, v6Pos);
+        //line3D(v3Pos, v7Pos);
         
         int state_index = getIndex(v0,v1,v2,v3,v4,v5,v6,v7);
         // println("cube:",i,j,k, "state_index", state_index);
@@ -273,45 +289,11 @@ void drawTriangles(PVector[] cubeVertexPositions, int[] indexEdges)
     middle_edges[9] = me9;
     middle_edges[10] = me10;
     middle_edges[11] = me11;
-    // debug vertex
-    //println("debug vertex");
-    //strokeWeight(8);
-    //stroke(255,0,0); //red
-    //point(cubeVertexPositions[0].x,cubeVertexPositions[0].y,cubeVertexPositions[0].z);
-    //stroke(0,255,0); //green
-    //point(cubeVertexPositions[1].x,cubeVertexPositions[1].y,cubeVertexPositions[1].z);
-    //stroke(0,0,255); //blue
-    //point(cubeVertexPositions[2].x,cubeVertexPositions[2].y,cubeVertexPositions[2].z);
-    //stroke(0,0,0); //black
-    //point(cubeVertexPositions[3].x,cubeVertexPositions[3].y,cubeVertexPositions[3].z);
     
-    //stroke(255,255,0); //yellow
-    //point(cubeVertexPositions[4].x,cubeVertexPositions[4].y,cubeVertexPositions[4].z);
-    //stroke(0,255,255); //cyan
-    //point(cubeVertexPositions[5].x,cubeVertexPositions[5].y,cubeVertexPositions[5].z);
-    //stroke(255,0,255); //magenta
-    //point(cubeVertexPositions[6].x,cubeVertexPositions[6].y,cubeVertexPositions[6].z);
-    //stroke(255,255,255); //white
-    //point(cubeVertexPositions[7].x,cubeVertexPositions[7].y,cubeVertexPositions[7].z);
-    
-    //stroke(0,255,255);
-    //point(me0.x,me0.y,me0.z);
-    //point(me1.x,me1.y,me1.z);
-    //point(me2.x,me2.y,me2.z);
-    //point(me3.x,me3.y,me3.z);
-    
-    //point(me4.x,me4.y,me4.z);
-    //point(me5.x,me5.y,me5.z);
-    //point(me6.x,me6.y,me6.z);
-    //point(me7.x,me7.y,me7.z);
-    
-    //point(me8.x,me8.y,me8.z);
-    //point(me9.x,me9.y,me9.z);
-    //point(me10.x,me10.y,me10.z);
-    //point(me11.x,me11.y,me11.z);
     
     // draw triangle 
     fill(255,0,127);
+    stroke(30);
     strokeWeight(1);
     beginShape();
       vertex(middle_edges[index_edge0].x,middle_edges[index_edge0].y,middle_edges[index_edge0].z);
@@ -368,11 +350,37 @@ void initFieldArrayPerlin()
   
 }
 
+void initFieldArraySimplex()
+{
+  float iOffs = 0;
+  float inc = .15;
+  for(int i = 0; i < x_width; i++)
+  {
+    float jOffs = 0;
+    for(int j = 0; j < y_height; j++)
+    {
+      float kOffs = 0;
+      for(int k = 0; k < z_depth; k++)
+      {
+        float r = (float) noise.eval(iOffs,jOffs,kOffs);
+        println(i,j,k,"noise simplex:",r);
+        field[i][j][k] = r;
+        if(r>isoValue) r=0.;
+        else r =1.;
+        field_states[i][j][k] = (int)r;
+        kOffs += inc;
+      }
+      jOffs += inc;
+    }
+    iOffs += inc;
+  }
+  
+}
+
 void initWorleyPoints()
 {
   for(int i = 0; i < points.length; i++)
   {
-    println(points[i]);
     points[i] = new PVector();
     points[i].x = random(width);
     points[i].y = random(width);
@@ -381,8 +389,10 @@ void initWorleyPoints()
   
 }
 
-void initFieldArrayWorley()
+void initFieldArrayWorley(int rank)
 {
+  int nBelow = 0;
+  int nAbove = 0;
   
   for(int i = 0; i < x_width; i++)
   {
@@ -391,21 +401,36 @@ void initFieldArrayWorley()
       for(int k = 0; k < z_depth; k++)
       {
         float distances[] = new float[points.length];
-        for(int p = 0; i < points.length; i++)
+        for(int p = 0; p < points.length; p++)
         {
-          float d = dist(i, j, k, points[p].x, points[p].y, points[p].z);
-          println("distance:", d);
-          distances[i] = d;
+          // debug multiplier par la resolution ??
+          float d = dist(i*res, j*res, k*res, points[p].x, points[p].y, points[p].z);
+          //println("distance between:",i,j,k,"and",points[p].x, points[p].y, points[p].z);
+          distances[p] = d;
         }
         float sorted[] = sort(distances);
-        float r = 1;
-        //println(i,j,k,"noise perlin:",r);
-        field[i][j][k] = r;
-        if(r>isoValue) r=0.;
-        else r =1.;
-        field_states[i][j][k] = (int)r;
+        
+        float distToNearestPoint = sorted[rank];
+        //println(i,j,k,"distToNearestPoint",distToNearestPoint);
+        distToNearestPoint = map(distToNearestPoint,0,400,0,1);
+        //println(i,j,k,"distToNearestPoint map",distToNearestPoint);
+        distToNearestPoint = constrain(distToNearestPoint,0,1);
+        //println(i,j,k,"distToNearestPoint constrain",distToNearestPoint);
+        
+        if(distToNearestPoint < .5) nBelow += 1;
+        else nAbove += 1; 
+        
+        field[i][j][k] = distToNearestPoint;
+        
+        if(distToNearestPoint > isoValue) distToNearestPoint=0.;
+        else distToNearestPoint =1.;
+        field_states[i][j][k] = (int)distToNearestPoint;
       }
     }
   }
+  
+  //println("nBelow:", nBelow);
+  //println("nAbove:", nAbove);
+  //println("maxDistance:", maxDistance);
   
 }
