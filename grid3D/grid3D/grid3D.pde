@@ -1,10 +1,30 @@
+//import peasy.*;
+// colors
+
+// TODO improvments
+// interpolation to draw triangles
+
+color c0 = #BAD1CD;
+color c1 = #416165;
+color c2 = #E15554;
+color c3 = #F6AE2D;
+color c4 = #542344;
+
+color fillColor = c2;
+//PeasyCam cam;
+float rotation = 0.0;
 float field[][][];
 int field_states[][][];
-int res = 10;
+int res = 25;
 int x_width, y_height, z_depth;
 // ISO SURFACE
 float isoValue = 0.25;
 float isoInc = .010;
+
+// record
+String filename = "simplex_anim";
+int nFrames = 1000;
+int currentFrame = 0;
 
 // WORLEY NOISE
 int nPoints = 50;
@@ -21,19 +41,24 @@ int[] triangles = triTable;
 void setup()
 {
   
-  size(600,600, P3D);
+  size(960,540, P3D);
   x_width  = width / res +1; 
   y_height = width / res +1; 
   z_depth  = width / res +1;
   
   field = new float[x_width][y_height][z_depth];
   field_states = new int[x_width][y_height][z_depth];
+  // CAM PEASY
+  //cam = new PeasyCam(this, 100);
   
+  //cam.setMinimumDistance(5);
+  //cam.setMaximumDistance(1000);
   //initFieldArrayRandom(); // RANDOM
   //initFieldArrayPerlin(); // PERLIN
   //initWorleyPoints();     // WORLEY1
   //initFieldArrayWorley(nth); // WORLEY2
-  initFieldArraySimplex(); // SIMPLEX
+  noise = new OpenSimplexNoise();// SIMPLEX1
+  initFieldArraySimplex(); // SIMPLEX 2
   // comparaison doc
   //field_states[0][0][0] = 0; // v4
   //field_states[0][0][1] = 0; // v7
@@ -43,13 +68,12 @@ void setup()
   //field_states[1][0][1] = 0; // v6
   //field_states[1][1][0] = 0; // v1
   //field_states[1][1][1] = 1; // v2
-  
+  frameRate(60);
 }
 
 void draw()
 {
-  
-  noLoop();
+  //noLoop();
   background(0);
   // debug worley
   //for(int i = 0; i < points.length; i++)
@@ -75,20 +99,30 @@ void draw()
           0, 1, 0 // cam orientation XYZ
           );
   
+  //float orbitRadius= 1500;
+  //float ypos= 500;
+  //float xpos= cos(radians(rotation))*orbitRadius;
+  //float zpos= sin(radians(rotation))*orbitRadius;
+  
+  //camera(xpos, ypos, zpos, 0, 0, 0, 0, -1, 0);
+  //rotation++;
+  
   //rotateX(0.35+ frameCount * .01);
   // ANIMATION
-  //if (frameCount % 2 == 0)
-  //{
-  //  initFieldArrayWorley(nth); // worley
-  //  initFieldArraySimplex(); // simplex
-  //  isoValue -= isoInc;
-  //  //println(isoValue, "frameCount % 2 == 0");
-  //}
-  //if(isoValue < 0 )
-  //{
-  //  println(isoValue, "<0");
-  //  isoValue = 1.;
-  //}
+  if (frameCount % 2 == 0)
+  {
+    //initFieldArrayWorley(nth); // worley
+    initFieldArraySimplex(); // simplex
+    //initFieldArrayRandom(); // RANDOM
+    //initFieldArrayPerlin(); // PERLIN
+    isoValue -= isoInc;
+    //println(isoValue, "frameCount % 2 == 0");
+  }
+  if(isoValue < 0 )
+  {
+    println(isoValue, "<0");
+    isoValue = 1.;
+  }
   
   PVector[] cubeVertexPositions = new PVector[8];
   // get values field array
@@ -187,7 +221,9 @@ void draw()
   //    }
   //  }
   //}
-  
+  if(currentFrame < nFrames)
+    saveFrame("./frames/"+filename+"-######.png");
+  currentFrame += 1;
 }
 
 void line3D(PVector a, PVector b)
@@ -292,7 +328,7 @@ void drawTriangles(PVector[] cubeVertexPositions, int[] indexEdges)
     
     
     // draw triangle 
-    fill(255,0,127);
+    fill(fillColor);
     stroke(30);
     strokeWeight(1);
     beginShape();
@@ -352,7 +388,7 @@ void initFieldArrayPerlin()
 
 void initFieldArraySimplex()
 {
-  float iOffs = 0;
+  float iOffs = 0.0;
   float inc = .15;
   for(int i = 0; i < x_width; i++)
   {
@@ -363,7 +399,7 @@ void initFieldArraySimplex()
       for(int k = 0; k < z_depth; k++)
       {
         float r = (float) noise.eval(iOffs,jOffs,kOffs);
-        println(i,j,k,"noise simplex:",r);
+        //println(i, j, k, "noise simplex:", r);
         field[i][j][k] = r;
         if(r>isoValue) r=0.;
         else r =1.;
