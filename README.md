@@ -59,3 +59,4 @@ final Worley noise value for the point. Worley noise can be used for a variety o
 
 One way to improve the smoothness and accuracy of the resulting mesh is to use interpolation techniques to estimate the position and normal vectors of the vertices on the isosurface. To implement interpolation with the cube marching algorithm, we can modify the lookup table used to generate the polygonal mesh. Instead of using a fixed set of intersection points between the cube edges and the isosurface, we can use the interpolated positions and scalar values to compute more accurate and smooth surfaces.
 
+
