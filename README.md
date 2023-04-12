@@ -1,7 +1,7 @@
 # 3D Noise Visualization With Marching Cube Algorithm
 
 ## Abstract
-3D visualizations of different noises using the marching cubes algorithm. Those ones are animated by varying the iso-surface value with time. The final result can be watched on [Vimeo]([https://www.genome.gov/](https://vimeo.com/808352034)).
+3D visualizations of different noises using the marching cubes algorithm. Those ones are animated by varying the iso-surface value with time. The final result can be watched on [Vimeo](https://vimeo.com/808352034).
 ## Introduction
 
 
