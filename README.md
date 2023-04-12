@@ -19,6 +19,10 @@ The configuration of each sub-grid is matched with one entry in the contours loo
 
 <img src="./images/sq_march_00.png" width="250" height="250">
 
+Vertex Patterns (2D)          |  
+:-------------------------:   |
+![](./images/sq_march_00.png) |
+
 We think of the dark blue region as the interior of an object, and the light blue region as the exterior of the object. We denote the 𝑂𝑁 (1) state by a black vertex and the 𝑂𝐹𝐹 (0) state by a white vertex. Thus, the configuration 7 = (0111)2 must correspond to an object whose contour intersects the top and left edges of the square. In this fashion, the contours in each sub-grid are approximated.
 
 
