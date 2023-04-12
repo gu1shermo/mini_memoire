@@ -33,6 +33,10 @@ In total there are 256 such combinations that can be formed by looking at the va
 
 <img src="./images/cu_march_01.png" width="250">
 
+Solarized dark             |  Solarized Ocean
+:-------------------------:|:-------------------------:
+![](./images/cu_march_00.png)  |  ![](./images/cu_march_01.png)
+
 Once we have determined the configuration for a single cube and placed our triangles, we move on to the next andrepeat the same process for all other cubes in the world.
 
 ## Noise implementation
