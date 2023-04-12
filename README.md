@@ -3,6 +3,9 @@
 ## Abstract
 3D visualizations of different noises using the marching cubes algorithm. Those ones are animated by varying the iso-surface value with time. The final result can be watched on [Vimeo](https://vimeo.com/808352034).
 
+
+![3D noise visualization](https://github.com/gu1shermo/mini_memoire/blob/5fad5d1befb4a63a0708f472aeec25596d1e8aca/images/noise-teaser-2.png)
+
 ## Introduction
 As an art and image technology students, we are used to using 2D noise textures, especially in a realistic / organic artistic approach to represent the complexity of the world around us. After watching a video by Daniel Shiffman about the square marching algorithm, I was curious to represent these noises in a three dimensional space, images that I could not find, especially on the Internet. To achieve this goal, I combined the cube marching algorithm with the most commonly used noise algorithms (Perlin,Worley, Simplex), in a Processing programming context.
 
@@ -15,7 +18,7 @@ The Marching Squares algorithm is a computer graphics algorithm introduced in th
 
 The configuration of each sub-grid is matched with one entry in the contours lookup table below.
 
-![Image00](https://github.com/gu1shermo/mini_memoire/blob/5fad5d1befb4a63a0708f472aeec25596d1e8aca/images/sq_march_00.png)
+![square marching table](https://github.com/gu1shermo/mini_memoire/blob/5fad5d1befb4a63a0708f472aeec25596d1e8aca/images/sq_march_00.png)
 
 We think of the dark blue region as the interior of an object, and the light blue region as the exterior of the object. We denote the 𝑂𝑁 (1) state by a black vertex and the 𝑂𝐹 𝐹 (0) state by a white vertex. Thus, the configuration 7 = (0111)2 must correspond to an object whose contour intersects the top and left edges of the square. In this fashion, the contours in each sub-grid are approximated.
 
