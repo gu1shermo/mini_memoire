@@ -25,15 +25,13 @@ We think of the dark blue region as the interior of an object, and the light blu
 ### Cube Marching Algorithm
 The main difference between the square marching algorithm and the cube marching algorithm is that the former operates in 2D space while the latter operates in 3D space. The Square marching algorithm is a 2D method that generates contour maps, while the cube marching algorithm is a 3D method that generates contour surfaces. Both algorithms use similar techniques to identify the location of the contours and generate intersection points, but they operate in different dimensional spaces.
 
-<img src="./images/cu_march_00.png" width="250">
 
 For example, if vertex 𝑣0 where to be of value −1.0, and all other vertices have a value of 1.0. Given that our iso-surface is 0.5, we can conclude that since vertex 𝑣0 is the only vertex below the threshold, we want to hide this vertex by creating a triangle in front of it by connecting edges 0, 3 and 8.
 In total there are 256 such combinations that can be formed by looking at the values of our vertices since cubes have 8 corners with each 2 possible states (28 = 256). These 256 configurations can be reduced to only 15, since most cases are symmetries.
 
 
-<img src="./images/cu_march_01.png" width="250">
 
-Solarized dark             |  Solarized Ocean
+One Cube                       |  Vertex Patterns
 :-------------------------:|:-------------------------:
 ![](./images/cu_march_00.png)  |  ![](./images/cu_march_01.png)
 
