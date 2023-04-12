@@ -3,7 +3,7 @@
 ## Abstract
 3D visualizations of different noises using the marching cubes algorithm. Those ones are animated by varying the iso-surface value with time. The final result can be watched on [Vimeo](https://vimeo.com/808352034).
 
-![3D noise visualization](./images/noise-teaser-2.png)
+![3D noise visualization teaser](./images/noise-teaser-2.png)
 
 ## Introduction
 As an art and image technology students, we are used to using 2D noise textures, especially in a realistic / organic artistic approach to represent the complexity of the world around us. After watching a video by Daniel Shiffman about the square marching algorithm, I was curious to represent these noises in a three dimensional space, images that I could not find, especially on the Internet. To achieve this goal, I combined the cube marching algorithm with the most commonly used noise algorithms (Perlin,Worley, Simplex), in a Processing programming context.
@@ -17,7 +17,7 @@ The Marching Squares algorithm is a computer graphics algorithm introduced in th
 
 The configuration of each sub-grid is matched with one entry in the contours lookup table below.
 
-![square marching table](https://github.com/gu1shermo/mini_memoire/blob/5fad5d1befb4a63a0708f472aeec25596d1e8aca/images/sq_march_00.png)
+![square marching table](./images/sq_march_00.png)
 
 We think of the dark blue region as the interior of an object, and the light blue region as the exterior of the object. We denote the 𝑂𝑁 (1) state by a black vertex and the 𝑂𝐹𝐹 (0) state by a white vertex. Thus, the configuration 7 = (0111)2 must correspond to an object whose contour intersects the top and left edges of the square. In this fashion, the contours in each sub-grid are approximated.
 
@@ -25,13 +25,13 @@ We think of the dark blue region as the interior of an object, and the light blu
 ### Cube Marching Algorithm
 The main difference between the square marching algorithm and the cube marching algorithm is that the former operates in 2D space while the latter operates in 3D space. The Square marching algorithm is a 2D method that generates contour maps, while the cube marching algorithm is a 3D method that generates contour surfaces. Both algorithms use similar techniques to identify the location of the contours and generate intersection points, but they operate in different dimensional spaces.
 
-![Cube Marching 00](https://github.com/gu1shermo/mini_memoire/blob/382b7df8cc9b01e81cdf980de5fe65caa6b112ad/images/cu_march_00.png)
+![Cube Marching 00](./images/cu_march_00.png)
 
 For example, if vertex 𝑣0 where to be of value −1.0, and all other vertices have a value of 1.0. Given that our iso-surface is 0.5, we can conclude that since vertex 𝑣0 is the only vertex below the threshold, we want to hide this vertex by creating a triangle in front of it by connecting edges 0, 3 and 8.
 In total there are 256 such combinations that can be formed by looking at the values of our vertices since cubes have 8 corners with each 2 possible states (28 = 256). These 256 configurations can be reduced to only 15, since most cases are symmetries.
 
 
-![Cube Marching 01](https://github.com/gu1shermo/mini_memoire/blob/382b7df8cc9b01e81cdf980de5fe65caa6b112ad/images/cu_march_01.png)
+![Cube Marching 01](./images/cu_march_01.png)
 
 Once we have determined the configuration for a single cube and placed our triangles, we move on to the next andrepeat the same process for all other cubes in the world.
 
