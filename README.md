@@ -17,8 +17,6 @@ The Marching Squares algorithm is a computer graphics algorithm introduced in th
 
 The configuration of each sub-grid is matched with one entry in the contours lookup table below.
 
-<img src="./images/sq_march_00.png" width="250" height="250">
-
 Vertex Patterns (2D)          |  
 :-------------------------:   |
 ![](./images/sq_march_00.png) |
@@ -57,4 +55,7 @@ Worley noise, also known as cellular noise or Voronoi noise, is a type of noise 
 with a unique value. We first generate a set of random points distributed throughout the space. then for each point in the space, we find the closest feature point. We compute the distance between the point and its closest feature point and finally we apply a distance function to the distances to get the
 final Worley noise value for the point. Worley noise can be used for a variety of applications, such as creating textures, generating terrain, and modeling natural phenomena like cracks and veins.
 
+## Improvements
+
+One way to improve the smoothness and accuracy of the resulting mesh is to use interpolation techniques to estimate the position and normal vectors of the vertices on the isosurface. To implement interpolation with the cube marching algorithm, we can modify the lookup table used to generate the polygonal mesh. Instead of using a fixed set of intersection points between the cube edges and the isosurface, we can use the interpolated positions and scalar values to compute more accurate and smooth surfaces.
 
